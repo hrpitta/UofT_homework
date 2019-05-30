@@ -1,6 +1,9 @@
 // from data.js
 var tableData = data;
 
+// Get a reference to the table body
+var tbody = d3.select("tbody");
+
 // YOUR CODE HERE!
 
 // Select the submit button
@@ -12,39 +15,36 @@ submit.on("click", function() {
   d3.event.preventDefault();
 
   // Select the input element and get the raw HTML node
-  var inputElement = d3.select("#datetime");
+  var inputDate = d3.select("#datetime");
+  var inputCity = d3.select("#city");
+  var inputState = d3.select("#state");
+  var inputCountry = d3.select("#country");
+  var inputShape = d3.select("#shape");
  
 
   // Get the value property of the input element
-  var inputValue = inputElement.property("value");
-  if inputValue <> moment(inputValue, 'M/D/YYYY',true){
-  alert("Date is invalid!!");
-  }
-  console.log(moment(inputValue, 'M/D/YYYY',true).isValid()); //true
+  
+  var inputValue = inputDate.property("value");
+  //const date = new Date(`${month}-${day}-${year}`)
+  //const isValidDate = (Boolean(+date) && date.getDate() == day)
   console.log(inputValue);
-  console.log(tableData);
+  //console.log(tableData);
 
-/*   var filteredData = people.filter(person => person.bloodType === inputValue);
-
-  console.log(filteredData);
-
-  BONUS: Calculate summary statistics for the age field of the filtered data
-
-  First, create an array with just the age values
-  var ages = filteredData.map(person => person.age);
-
-  Next, use math.js to calculate the mean, median, mode, var, and std of the ages
-  var mean = math.mean(ages);
-  var median = math.median(ages);
-  var mode = math.mode(ages);
-  var variance = math.var(ages);
-  var standardDeviation = math.std(ages);
-
-  Finally, add the summary stats to the `ul` tag
-  d3.select(".summary")
-    .append("li").text(`Mean: ${mean}`)
-    .append("li").text(`Median: ${median}`)
-    .append("li").text(`Mode: ${mode}`)
-    .append("li").text(`Variance: ${variance}`)
-    .append("li").text(`Standard Deviation: ${standardDeviation}`); */
+  var filteredData = tableData.filter(table => table.datetime === inputValue);
+  console.log(filteredData)
+  
+  if (filteredData.length >= 1) {
+   d3.selectAll("td").remove();
+   filteredData.forEach((ufoReport) => {
+    var row = tbody.append("tr");
+    Object.entries(ufoReport).forEach(([key, value]) => {
+      var cell = row.append("td");
+      cell.text(value);
+    });
+  });
+  }
+  else {
+    d3.selectAll("td").remove();
+    alert("No data for this search criteria!");
+  }
 });
